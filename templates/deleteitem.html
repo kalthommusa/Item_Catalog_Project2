@@ -1,0 +1,17 @@
+{% extends "main.html" %}
+{% block content %}
+{% include "header.html" %}
+<h2> Are you sure you want to delete your wedding venue post ? </h2>
+
+<form action="{{url_for('deleteItem', weddingvenue_id=weddingvenue_id, item_id=item_id)}}" method="POST">
+                            
+		<a type="button" href="{{url_for('showItems', weddingvenue_id=weddingvenue_id)}}" class="btn btn-primary">Cancel</a>
+		
+		<a type="button">
+			<input type="submit" class="btn btn-primary btn-danger" value="Delete">
+		</a>
+</form>
+
+
+
+{% endblock %}

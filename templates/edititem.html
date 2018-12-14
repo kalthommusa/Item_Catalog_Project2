@@ -1,0 +1,42 @@
+{% extends "main.html" %}
+{% block content %}
+{% include "header.html" %}
+	<div class="row divider green">
+		<div class="col-md-12"></div>
+	</div>
+	<div class="row banner item">
+		<div class="col-md-11 col-md-offset-1 padding-none">
+			<h1>Edit Item</h1>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-6 col-md-offset-1 padding-top">
+			<form action="#" method = "post">
+				<div class="form-group">
+					<label for="location">Location:</label>
+					<textarea class="form-control" maxlength="250" rows="3" name="location">{{item.location}}
+					</textarea>
+
+					<label for="price">Price:</label>
+					<div class="input-group">
+						<input type ="text" class="form-control" maxlength="10" name="price" value="{{item.price }}">
+					</div>
+
+					<label for="phoneNum">Contact Number:</label>
+					<input type="text" class="form-control" name="phoneNum" value="{{item.contact_number}}">
+
+                    <label for="capacity">Capacity:</label>
+					<input type="text" class="form-control" name="capacity" value="{{item.capacity}}">
+
+					
+					<button type="submit" class="btn btn-default" id="submit" type="submit">
+					<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>Save</button>
+					<a href = '{{url_for('showItems', weddingvenue_id=weddingvenue_id)}}'>
+						<button class="btn btn-default delete" type="button">
+						<span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Cancel</button>
+					</a>
+				</div>
+			</form>
+		</div>
+	</div>
+{% endblock %}
