@@ -47,8 +47,8 @@ It is a platform that provides a list of wedding venues names, and by clicking o
 ## Setup the database
  
   1. To create the database, run python database_setup.py
-  2. To populate the database with some data(optional), run populate_database.py  
-  7. To start the application, run project.py
+  2. To populate the database with some data(optional), run python populate_database.py  
+  7. To start the application, run python project.py
   8. To access the application, open up the browser to http://localhost:5000
 
 ## JSON Endpoints
