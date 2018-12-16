@@ -17,9 +17,9 @@ import requests
 
 app = Flask(__name__)
 
-# Import and config for picture upload
+# config for picture upload
 UPLOAD_FOLDER = 'UPLOAD_FOLDER/'
-ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 8 * 1024 * 1024
 
@@ -244,6 +244,15 @@ def itemJSON(weddingvenue_id, item_id):
 @app.route('/')
 @app.route('/weddingvenues/')
 def showWeddingVenues():
+    """
+    A function that shows a list of all wedding venues in the home page,
+    takes no arguments.
+    return:
+    -It shows a list of all wedding venues names as well as
+    gives the ability to the users who logged in to modify
+    the wedding venues that they have posted
+    -otherwise, it shows wedding venues without the ability to modify them.
+    """
     weddingvenues = session.query(
         WeddingVenues).order_by(asc(WeddingVenues.name))
     if 'username' not in login_session:
@@ -259,6 +268,12 @@ def showWeddingVenues():
 # Create a new wedding venue
 @app.route('/weddingvenue/new/', methods=['GET', 'POST'])
 def newWeddingVenue():
+    """
+    A function to add a new wedding venue,takes no arguments.
+    return:
+    -It allows the logged in users to add a new wedding venue
+    -otherwise, it redirects the users to the login page.
+    """
     if 'username' not in login_session:
         return redirect('/login')
     if request.method == 'POST':
@@ -281,15 +296,22 @@ def newWeddingVenue():
         'GET',
         'POST'])
 def editWeddingVenue(weddingvenue_id):
+    """
+    A function that edits a specific wedding venue, it takes an id for
+    a specific wedding venue as an argument.
+    return:
+    -It allows the logged in users to edit only the wedding venue that
+    they have posted and gives them the option to cancel the edit operation.
+    -If the users are logged in but they're trying to edit a wedding venue
+    that they didn't post it, a flash message will appear as a feedback that
+    they cannot edit the wedding venue.
+    """
     editedWeddingVenue = session.query(
         WeddingVenues).filter_by(id=weddingvenue_id).one()
     if 'username' not in login_session:
         return redirect('/login')
     # local permission check for logged in users to edit only their data
     if editedWeddingVenue.user_id != login_session['user_id']:
-        # return "<script>function myFunction() {alert('You are not authorized
-        # to edit this wedding venue. Please create your own wedding venue in
-        # order to edit.');}</script><body onload='myFunction()'>"
         flash('You are not authorized to edit this wedding venue. \
               Please create your own wedding venue in order to edit.')
         return redirect(url_for('showWeddingVenues'))
@@ -313,15 +335,22 @@ def editWeddingVenue(weddingvenue_id):
         'GET',
         'POST'])
 def deleteWeddingVenue(weddingvenue_id):
+    """
+    A function that deletes a specific wedding venue, it takes an id for
+    a specific wedding venue as an argument.
+    return:
+    -It allows the logged in users to delete only the wedding venue that
+    they have posted and gives them the option to cancel the delete operation.
+    -If the users are logged in but they're trying to delete a wedding venue
+    that they haven't post it, a flash message will appear as a feedback that
+    they cannot delete the wedding venue.
+    """
     deletedWeddingVenue = session.query(
         WeddingVenues).filter_by(id=weddingvenue_id).one()
     if 'username' not in login_session:
         return redirect('/login')
     # local permission check for logged in users to edit only their data
     if deletedWeddingVenue.user_id != login_session['user_id']:
-        # return "<script>function myFunction() {alert('You are not authorized
-        # to delete this wedding venue. Please create your own wedding venue in
-        # order to delete.');}</script><body onload='myFunction()'>"
         flash('You are not authorized to delete this wedding venue. \
               Please create your own wedding venue in order to delete.')
         return redirect(url_for('showWeddingVenues'))
@@ -342,6 +371,15 @@ def deleteWeddingVenue(weddingvenue_id):
 # Show details of specific wedding venue
 @app.route('/weddingvenues/<int:weddingvenue_id>/items/')
 def showItems(weddingvenue_id):
+    """
+    A function that takes an id for a specific wedding venue as an argument.
+    return:
+    -It shows all items' details for a specific wedding venue as well as gives
+    the ability to the users who logged in to modify the items that
+    they have posted
+    -otherwise, it only shows item details for a specific wedding venue
+    without the ability to modify it.
+    """
     weddingvenue = session.query(
         WeddingVenues).filter_by(id=weddingvenue_id).one()
     creator = getUserInfo(weddingvenue.user_id)
@@ -376,15 +414,18 @@ def allowed_file(filename):
         'GET',
         'POST'])
 def newItem(weddingvenue_id):
+    """
+    A function to add a new item, it takes an id for a specific
+    wedding venue that the user want to make an item for it as an argument.
+    return:
+    -It allows only the logged in users to add a new item
+    to a specific wedding venue
+    -otherwise, it redirects the user to the login page.
+    """
     if 'username' not in login_session:
         return redirect('/login')
     weddingvenue = session.query(
         WeddingVenues).filter_by(id=weddingvenue_id).one()
-    # local permission check for logged in users to edit only their data
-    # if login_session['user_id'] != weddingvenue.user_id:
-    # return "<script>function myFunction() {alert('You are not authorized to
-    # add items to this wedding venue. Please create your own wedding venue in
-    # order to add items.');}</script><body onload='myFunction()'>"
     if request.method == 'POST':
         file = request.files['file']
         if file and allowed_file(file.filename):
@@ -413,17 +454,26 @@ def newItem(weddingvenue_id):
         'GET',
         'POST'])
 def editItem(weddingvenue_id, item_id):
+    """
+    A function to edit an item, it takes an id for a specific item that
+    it's going to edit and an id for the wedding venue that the item
+    belongs to as arguments.
+    return:
+    -It allows the logged in users to edit only the item that they have
+    posted and gives them the option to cancel the edit operation.
+    -If the users are logged in but they're trying to edit an item that
+    they haven't post it, a flash message will appear as a feedback that
+    they cann't update the item.
+    """
+
     if 'username' not in login_session:
         return redirect('/login')
     weddingvenue = session.query(
         WeddingVenues).filter_by(id=weddingvenue_id).one()
     editedItem = session.query(VenueItem).filter_by(id=item_id).one()
+
     # local permission check for logged in users to edit only their data
     if login_session['user_id'] != weddingvenue.user_id:
-        # return "<script>function myFunction() {alert('You are not authorized
-        # to edit items to this wedding venue. Please create your own wedding
-        # venue in order to edit items.');}</script><body
-        # onload='myFunction()'>"
         flash('You are not authorized to edit items to this wedding venue. \
               Please create your own wedding venue in order to edit items.')
         return redirect(url_for('showItems', weddingvenue_id=weddingvenue_id))
@@ -455,6 +505,17 @@ def editItem(weddingvenue_id, item_id):
         'GET',
         'POST'])
 def deleteItem(weddingvenue_id, item_id):
+    """
+    A function to delete an item, it takes an id for a specific item that
+    it's going to delete and an id for the wedding venue that the item
+    belongs to as arguments.
+    return:
+    -It allows the logged in users to delete only the item that they have
+    posted and gives them the option to cancel the delete operation.
+    -If the users are logged in but they're trying to delete an item that
+    they haven't post it, a flash message will appear as a feedback that
+    they cannot delete the item.
+    """
     if 'username' not in login_session:
         return redirect('/login')
     weddingvenue = session.query(
@@ -463,16 +524,13 @@ def deleteItem(weddingvenue_id, item_id):
     venue_poster = getUserID(login_session["email"])
     # local permission check for logged in users to edit only their data
     if login_session['user_id'] != deletedItem.user_id:
-        # return "<script>function myFunction() {alert('You are not authorized
-        # to delete items to this wedding venue. Please create your own wedding
-        # venue in order to delete items.');}</script><body
-        # onload='myFunction()'>"
-        flash('You are not authorized to delete items to this wedding venue. \
+        flash('You are not authorized to delete item to this wedding venue. \
               Please create your own wedding venue in order to delete items.')
         return redirect(url_for('showItems', weddingvenue_id=weddingvenue_id))
     if request.method == 'POST':
-        # delete associated wedding venue picture while deleting a wedding
-        # venue
+        """
+        Delete associated wedding venue picture while deleting a wedding venue
+        """
         os.remove(
             os.path.join(
                 app.config['UPLOAD_FOLDER'],

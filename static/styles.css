@@ -95,7 +95,7 @@ h3 {
 .divider.blue {
 	background-color: #42C3C9;
 }
-.divider.green {
+.divider.purple {
 	background-color: #cc00cc;
 }
 .banner.main {
@@ -119,7 +119,7 @@ h3 {
  .weddingvenue-list {
  	background-color: #ffb3b3;
  	padding: 20px;
-u }
+}
  .weddingvenue-list:hover {
  	background-color: #ff66ff;
  	padding: 20px;

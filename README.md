@@ -31,16 +31,25 @@ It is a platform that provides a list of wedding venues names, and by clicking o
   2. Install [Vagrant](https://www.vagrantup.com/downloads.html)
   3. Download [Udacity Vagrantfile](https://d17h27t6h515a5.cloudfront.net/topher/2017/August/59822701_fsnd-virtual-machine/fsnd-virtual-machine.zip)
 
-## How to run the project 
+## How to run the project:
 
-  1. Clone this repository inside the vagrant diroctory that you just downloaed by running : git clone git://github.com/kalthommusa/Item_Catalog_Project2.git 
-  2. Navigate to cd vagrant
+  * Clone this repository inside the vagrant directory that you just downloaded by running: 
+  git clone git://github.com/kalthommusa/Item_Catalog_Project2.git
+
+## Start your machine   
+
+  1. Navigate to cd vagrant
   3. Run vagrant up
   4. Run vagrant ssh
-  5. Navigate to cd /vagrant
-  6. Navigate to cd Item_Catalog_Project2 
-  7. Run project.py
-  8. open up the browser to http://localhost:5000
+  5. Access the shared folder cd /vagrant
+  6. Navigate to cd Item_Catalog_Project2
+  
+## Setup the database
+ 
+  1. To create the database, run python database_setup.py
+  2. To populate the database with some data(optional), run populate_database.py  
+  7. To start the application, run project.py
+  8. To access the application, open up the browser to http://localhost:5000
 
 ## JSON Endpoints
 
